@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學測模擬器 2025 - 決戰申請 (修正終極版)</title>
+    <title>學測模擬器 2025 - 決戰申請 (完整資料版)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Microsoft JhengHei', sans-serif; padding-bottom: 50px; }
+        body { background-color: #f0f2f5; font-family: 'Microsoft JhengHei', sans-serif; padding-bottom: 180px; /* 增加底部空間給購物車 */ }
         .header-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 0; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
         .stat-card { background: white; border-radius: 8px; padding: 10px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -44,11 +44,41 @@
         .light-red { background-color: #dc3545; box-shadow: 0 0 4px #dc3545; }
         
         .dept-card { border-left: 4px solid #ddd; margin-bottom: 8px; font-size: 0.9rem; }
-        .bottom-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #ccc; padding: 10px; z-index: 1050; display: none; }
+        
+        /* 底部購物車樣式優化 */
+        .bottom-cart { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: white; border-top: 1px solid #ccc; 
+            padding: 15px; z-index: 1050; display: none; 
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            max-height: 250px;
+        }
+        .cart-list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-height: 120px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .cart-item-badge {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        .cart-item-badge .btn-close {
+            margin-left: 8px;
+            font-size: 0.7rem;
+        }
         
         .log-area { max-height: 100px; overflow-y: auto; background: #333; color: #0f0; font-family: monospace; padding: 5px; border-radius: 5px; font-size: 0.8rem; margin-top: 10px; }
 
-        /* 表格樣式 */
         .score-table th, .score-table td { text-align: center; vertical-align: middle; }
     </style>
 </head>
@@ -166,13 +196,16 @@
             </div>
         </div>
 
-        <div class="bottom-cart" id="application-cart" style="display: flex;">
-            <div class="container d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>志願：</strong> <span id="cart-count" class="badge bg-primary">0</span> / 6
-                    <div id="cart-items" class="small text-muted text-truncate" style="max-width: 200px;"></div>
+        <!-- 底部志願清單 (修改版) -->
+        <div class="bottom-cart flex-column" id="application-cart">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>已選志願清單 (<span id="cart-count">0</span>/6)</strong>
+                    <button class="btn btn-success btn-sm" onclick="submitApplication()">確認送出志願</button>
                 </div>
-                <button class="btn btn-success btn-sm" onclick="submitApplication()">送出</button>
+                <div id="cart-items" class="cart-list-container">
+                    <!-- 志願項目將列在這裡 -->
+                </div>
             </div>
         </div>
     </div>
@@ -233,7 +266,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // --- 1. 遊戲資料結構 ---
         const SUBJECTS_CONFIG = [
             { id: 'chi', name: '國文', max: 100, color: 'bg-primary' },
             { id: 'eng', name: '英語', max: 100, color: 'bg-info' },
@@ -243,16 +275,14 @@
             { id: 'nat', name: '自然', max: 128, color: 'bg-secondary' }
         ];
 
-        // 級距設定
         let GRADE_INTERVALS = { 'chi': 6.6, 'eng': 6.5, 'mathA': 5.8, 'mathB': 6.8, 'soc': 8.2, 'nat': 7.5 };
         
-        // 遊戲狀態
         let gameState = { week: 1, energy: 100, subjects: [], isGameOver: false };
-        let playerResults = {}; // {id: {raw, grade, interval}}
+        let playerResults = {}; 
         let currentStandards = {}; 
         let applicationCart = [];
         let ALL_SCHOOLS_DATA = [];
-        let lastEventSubjectId = null; // 紀錄上次發生事件的科目，避免連續
+        let lastEventSubjectId = null;
 
         function log(msg, type = 'normal') {
             const logArea = document.getElementById('game-log');
@@ -263,8 +293,11 @@
             logArea.prepend(div);
         }
 
-        // --- 2. 初始化 ---
         async function initGame() {
+            // 設定社會科級距 (6~8 隨機)
+            GRADE_INTERVALS['soc'] = parseFloat((6 + Math.random() * 2).toFixed(2));
+            console.log("本局社會科級距:", GRADE_INTERVALS['soc']);
+
             const files = ['schools_1.json', 'schools_2.json', 'schools_3.json'];
             try {
                 const promises = files.map(url => fetch(url).then(res => {
@@ -333,7 +366,6 @@
             bar.className = `progress-bar ${gameState.energy<=20 ? 'bg-danger':'bg-success'}`;
         }
 
-        // --- 3. 核心邏輯 ---
         function randomNormal(mean, stdDev) {
             let u=0, v=0;
             while(u===0) u=Math.random(); 
@@ -359,7 +391,6 @@
             sub.score += gain;
             sub.lastTrained = gameState.week;
 
-            // 滿分懲罰
             if(sub.score >= sub.max) {
                 sub.score = sub.max;
                 if(sub.id !== 'nat' && sub.id !== 'soc') {
@@ -369,14 +400,12 @@
                 }
             }
 
-            // 隨機事件 (機率降為 8%，且避免同一科連續)
             if(Math.random() < 0.08) {
                 let possibleTargets = gameState.subjects.filter(s => s.id !== lastEventSubjectId);
-                // 如果只剩一科或者過濾後沒東西(理論上不可能因為有6科)，就全取
                 if(possibleTargets.length === 0) possibleTargets = gameState.subjects;
                 
                 let target = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
-                lastEventSubjectId = target.id; // 更新冷卻目標
+                lastEventSubjectId = target.id;
 
                 let drop = Math.floor(Math.random()*5)+2;
                 target.score = Math.max(0, target.score - drop);
@@ -410,7 +439,6 @@
             updateUI();
         }
 
-        // --- 4. 成績計算與顯示 ---
         function calculateGrade(score, sid) {
             return clamp(Math.round(score / GRADE_INTERVALS[sid]), 0, 15);
         }
@@ -451,12 +479,10 @@
                 let grade = calculateGrade(finalScore, sub.id);
                 totalGrade += grade;
 
-                // 儲存結果
                 if(isFinal) {
                     playerResults[sub.id] = { raw: finalScore.toFixed(2), grade: grade, interval: interval };
                 }
 
-                // 生成表格行
                 let row = `
                     <tr>
                         <td class="fw-bold">${sub.name}</td>
@@ -497,7 +523,6 @@
              showScoreCard(true);
         }
 
-        // --- 5. 志願選填邏輯 ---
         function renderMyScoreBoard() {
             let htmlRaw='<td>原始</td>', htmlRank='<td>級分</td>', htmlTop='<td>頂標</td>', htmlFront='<td>前標</td>';
             let total=0;
@@ -547,15 +572,11 @@
             
             sch.depts.forEach(dept => {
                 const ana = analyzeProbability(dept);
-                // reqText: 檢定標準
                 let reqText = Object.keys(dept.req).map(k=>`${SUBJECTS_CONFIG.find(s=>s.id==k).name}${dept.req[k]}`).join(',');
-                // wText: 採計科目
                 let wText = dept.weight.map(w=>SUBJECTS_CONFIG.find(s=>s.id==w).name).join('+');
-                
                 let light = ana.status==='safe'?'light-green':(ana.status==='risky'?'light-yellow':'light-red');
                 let inCart = applicationCart.some(i=>i.sName===sch.name && i.dName===dept.name);
                 
-                // 按鈕邏輯：已加入則顯示取消(紅)，未加入顯示加入(藍)
                 let btn = inCart 
                     ? `<button class="btn btn-outline-danger btn-sm" onclick="removeFromCartByObj('${sch.name}','${dept.name}')">取消選填</button>`
                     : `<button class="btn btn-outline-primary btn-sm" onclick="addToCart('${sch.name}','${dept.name}')">加入志願</button>`;
@@ -577,15 +598,12 @@
         }
 
         function analyzeProbability(dept) {
-            // 檢定
             for(let k in dept.req) {
                 if(playerResults[k].grade < currentStandards[k][dept.req[k]]) return {status:'fail', msg:'未達標'};
             }
-            // 甄試總分 (總級分)
             let myTotalGrade = 0; 
             dept.weight.forEach(w => myTotalGrade += playerResults[w].grade);
             
-            // baseScore 在 JSON 中代表去年的錄取總級分
             if(myTotalGrade >= dept.baseScore) return {status:'safe', msg:'穩'};
             if(myTotalGrade >= dept.baseScore - 2) return {status:'risky', msg:'有機會'};
             return {status:'fail', msg:'危險'};
@@ -621,9 +639,14 @@
             const bar = document.getElementById('application-cart');
             bar.style.display = applicationCart.length>0 ? 'flex':'none';
             document.getElementById('cart-count').innerText = applicationCart.length;
-            document.getElementById('cart-items').innerHTML = applicationCart.map((i,idx)=>
-                `<span class="badge bg-secondary me-1" style="cursor:pointer" onclick="remCart(${idx})">${i.sName.substr(0,2)}.${i.dName.substr(0,2)}✕</span>`
-            ).join('');
+            
+            const listDiv = document.getElementById('cart-items');
+            listDiv.innerHTML = applicationCart.map((i,idx)=> `
+                <div class="cart-item-badge">
+                    <span>${i.sName} - ${i.dName}</span>
+                    <button type="button" class="btn-close" onclick="remCart(${idx})"></button>
+                </div>
+            `).join('');
         }
 
         window.remCart = function(idx) {
@@ -642,22 +665,16 @@
                 let pass = true;
                 let reason = "";
                 
-                // 1. 檢定標準
                 for(let k in dept.req) {
                     if(playerResults[k].grade < currentStandards[k][dept.req[k]]) {
                         pass=false; reason=`${SUBJECTS_CONFIG.find(s=>s.id==k).name}標未達`; break;
                     }
                 }
                 
-                // 2. 甄試總分 (採計科目級分總和)
                 let myTotalGrade = 0;
                 dept.weight.forEach(w => myTotalGrade += playerResults[w].grade);
-                
-                // 模擬錄取分數 (基準分浮動 +/- 1 級分)
                 let admissionCutoff = dept.baseScore + (Math.floor(Math.random()*3) - 1);
-                
                 let admit = pass && (myTotalGrade >= admissionCutoff);
-                
                 let badge = admit ? '<span class="badge bg-success">錄取</span>' : '<span class="badge bg-secondary">未錄取</span>';
                 let msg = pass 
                     ? (admit ? `甄試總級分 ${myTotalGrade} 達錄取標準 (${admissionCutoff})` : `甄試總級分 ${myTotalGrade} 未達錄取標準 (${admissionCutoff})`)

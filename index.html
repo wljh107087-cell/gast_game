@@ -3,31 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學測模擬器 2025 - 決戰申請 (整合版)</title>
+    <title>學測模擬器 2025 - 決戰申請 (修正終極版)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Microsoft JhengHei', sans-serif; padding-bottom: 80px; }
-        .header-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 0; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .stat-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: transform 0.2s; position: relative; }
-        .stat-card:hover { transform: translateY(-2px); }
-        .progress { height: 20px; margin-top: 10px; background-color: #e9ecef; }
-        .progress-bar { font-weight: bold; line-height: 20px; transition: width 0.6s ease; }
-        .energy-bar-container { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); padding: 10px 0; border-bottom: 1px solid #ddd; backdrop-filter: blur(5px); }
-        .log-area { height: 300px; overflow-y: auto; background: #333; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 0.9rem; }
+        body { background-color: #f0f2f5; font-family: 'Microsoft JhengHei', sans-serif; padding-bottom: 50px; }
+        .header-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 0; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
-        /* 訓練按鈕樣式 */
-        .train-btn-group .btn { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80px; }
+        .stat-card { background: white; border-radius: 8px; padding: 10px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .subject-title { font-size: 1rem; font-weight: bold; display: flex; justify-content: space-between; }
+        .progress { height: 15px; margin-top: 5px; background-color: #e9ecef; }
+        .progress-bar { font-size: 0.8rem; line-height: 15px; transition: width 0.3s ease; }
         
-        /* 申請頁面樣式 */
+        .energy-bar-container { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); padding: 8px 0; border-bottom: 1px solid #ddd; backdrop-filter: blur(5px); }
+        
+        /* 四格控制台 */
+        .control-panel { margin-top: 20px; }
+        .method-card { border: none; height: 100%; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .method-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+        .method-header { padding: 10px; text-align: center; color: white; font-weight: bold; border-radius: 8px 8px 0 0; }
+        .method-body { padding: 10px; background: white; border-radius: 0 0 8px 8px; }
+        
+        .subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .btn-subject { font-size: 0.85rem; padding: 5px 0; border: 1px solid #eee; background: #fff; transition: all 0.1s; }
+        .btn-subject:hover { background: #f8f9fa; filter: brightness(0.95); }
+        .btn-subject:active { transform: scale(0.95); }
+
+        .bg-method-0 { background-color: #17a2b8; }
+        .bg-method-1 { background-color: #0d6efd; }
+        .bg-method-2 { background-color: #ffc107; color: #000; }
+        .bg-method-3 { background-color: #dc3545; }
+
+        /* 申請頁面 */
         .school-list-item { cursor: pointer; transition: background 0.2s; }
         .school-list-item:hover { background-color: #f8f9fa; }
         .school-list-item.active { background-color: #e7f1ff; border-left: 4px solid #0d6efd; }
-        .traffic-light { width: 15px; height: 15px; border-radius: 50%; display: inline-block; margin-right: 5px; border: 1px solid rgba(0,0,0,0.1); }
-        .light-green { background-color: #28a745; box-shadow: 0 0 5px #28a745; }
-        .light-yellow { background-color: #ffc107; box-shadow: 0 0 5px #ffc107; }
-        .light-red { background-color: #dc3545; box-shadow: 0 0 5px #dc3545; }
-        .dept-card { border-left: 5px solid #ddd; margin-bottom: 10px; }
-        .bottom-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #ccc; padding: 10px; z-index: 1050; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: none; }
+        
+        .traffic-light { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .light-green { background-color: #28a745; box-shadow: 0 0 4px #28a745; }
+        .light-yellow { background-color: #ffc107; box-shadow: 0 0 4px #ffc107; }
+        .light-red { background-color: #dc3545; box-shadow: 0 0 4px #dc3545; }
+        
+        .dept-card { border-left: 4px solid #ddd; margin-bottom: 8px; font-size: 0.9rem; }
+        .bottom-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #ccc; padding: 10px; z-index: 1050; display: none; }
+        
+        .log-area { max-height: 100px; overflow-y: auto; background: #333; color: #0f0; font-family: monospace; padding: 5px; border-radius: 5px; font-size: 0.8rem; margin-top: 10px; }
+
+        /* 表格樣式 */
+        .score-table th, .score-table td { text-align: center; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -41,7 +63,7 @@
                     <div class="col-8">
                         <div class="d-flex align-items-center">
                             <span class="me-2">體力:</span>
-                            <div class="progress flex-grow-1" style="height: 25px;">
+                            <div class="progress flex-grow-1" style="height: 20px;">
                                 <div id="energy-bar" class="progress-bar bg-success" style="width: 100%">100%</div>
                             </div>
                         </div>
@@ -52,81 +74,74 @@
 
         <div class="header-section text-center">
             <div class="container">
-                <h1>🎓 學測模擬器 2025</h1>
-                <p>目標：練好六科，撐過20週，使用真實大學資料申請！</p>
+                <h2 class="m-0">🎓 學測模擬器 2025</h2>
             </div>
         </div>
 
         <div class="container">
+            <div class="row" id="subjects-container"></div>
+            
             <div class="row">
-                <!-- 左側：科目列表 (主要操作區) -->
-                <div class="col-lg-8 mb-4">
-                    <h5 class="mb-3">📚 點擊下方按鈕開始訓練</h5>
-                    <div class="row" id="subjects-container">
-                        <!-- 科目卡片由 JS 生成 -->
+                <div class="col-12">
+                    <div id="game-log" class="log-area"><div>遊戲開始！請選擇下方的訓練方式...</div></div>
+                </div>
+            </div>
+
+            <div class="row control-panel g-3">
+                <div class="col-12 text-center mb-1"><h5>👇 選擇訓練方式與科目 (直接點擊)</h5></div>
+                
+                <div class="col-lg-3 col-6">
+                    <div class="method-card">
+                        <div class="method-header bg-method-0">📖 稍微翻翻<br><small style="font-weight:normal; font-size:0.8rem">-5% | 效果 低</small></div>
+                        <div class="method-body"><div class="subject-grid" id="grid-0"></div></div>
                     </div>
                 </div>
-
-                <!-- 右側：資訊與紀錄 -->
-                <div class="col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-header bg-dark text-white">
-                            <h5 class="m-0">⚠️ 遊戲規則</h5>
-                        </div>
-                        <div class="card-body small">
-                            <ul>
-                                <li>點擊左側科目的<b>「訓練」</b>按鈕，選擇強度。</li>
-                                <li><b>數學A</b> 很難，進步幅度隨機 (0.1~0.5)。</li>
-                                <li><b>超過 2 週</b>沒讀該科，會生疏倒退。</li>
-                                <li><b>體力耗盡</b>或不足以訓練時，自動進入下一週。</li>
-                                <li>每 5 週會有一次模擬考。</li>
-                                <li>第 20 週結束後進行學測與志願選填。</li>
-                            </ul>
-                        </div>
+                <div class="col-lg-3 col-6">
+                    <div class="method-card">
+                        <div class="method-header bg-method-1">✍️ 認真刷題<br><small style="font-weight:normal; font-size:0.8rem">-10% | 效果 中</small></div>
+                        <div class="method-body"><div class="subject-grid" id="grid-1"></div></div>
                     </div>
-
-                    <div class="card">
-                        <div class="card-header bg-secondary text-white">
-                            <h5 class="m-0">📢 系統紀錄</h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <div id="game-log" class="log-area"><div>系統初始化中...</div></div>
-                        </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="method-card">
+                        <div class="method-header bg-method-2">🧠 補習班衝刺<br><small style="font-weight:normal; font-size:0.8rem">-15% | 效果 高</small></div>
+                        <div class="method-body"><div class="subject-grid" id="grid-2"></div></div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="method-card">
+                        <div class="method-header bg-method-3">🔥 燃燒生命<br><small style="font-weight:normal; font-size:0.8rem">-20% | 效果 極限</small></div>
+                        <div class="method-body"><div class="subject-grid" id="grid-3"></div></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 申請入學畫面 (隱藏) -->
+    <!-- 申請入學畫面 -->
     <div id="application-view" style="display: none;">
         <div class="header-section text-center bg-success">
             <div class="container">
-                <h1>🏫 大學個人申請志願選填</h1>
-                <p>資料來源：外部 JSON 檔 | 請依照你的分數，選擇最多 6 個志願</p>
+                <h2>🏫 志願選填</h2>
+                <p class="m-0">甄試總分為採計科目級分總和</p>
             </div>
         </div>
 
         <div class="container mb-5">
-            <!-- 成績看板 -->
-            <div class="card mb-4">
-                <div class="card-header bg-dark text-white d-flex justify-content-between">
-                    <span>📝 我的成績單</span>
-                    <span id="my-total-grade"></span>
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white d-flex justify-content-between py-2">
+                    <span class="small">📝 成績單</span>
+                    <span id="my-total-grade" class="small fw-bold"></span>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-sm text-center mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>項目</th><th>國文</th><th>英語</th><th>數A</th><th>數B</th><th>社會</th><th>自然</th>
-                                </tr>
-                            </thead>
+                        <table class="table table-bordered table-sm text-center mb-0" style="font-size: 0.9rem;">
+                            <thead class="table-light"><tr><th>項目</th><th>國</th><th>英</th><th>數A</th><th>數B</th><th>社</th><th>自</th></tr></thead>
                             <tbody>
-                                <tr id="score-row-raw"><td>原始分</td><!-- JS填入 --></tr>
-                                <tr id="score-row-rank" class="fw-bold text-primary"><td>級分</td><!-- JS填入 --></tr>
-                                <tr id="standards-row-top" class="text-danger small"><td>頂標</td><!-- JS填入 --></tr>
-                                <tr id="standards-row-front" class="text-success small"><td>前標</td><!-- JS填入 --></tr>
+                                <tr id="score-row-raw"><td>原始</td></tr>
+                                <tr id="score-row-rank" class="fw-bold text-primary"><td>級分</td></tr>
+                                <tr id="standards-row-top" class="text-danger small"><td>頂標</td></tr>
+                                <tr id="standards-row-front" class="text-success small"><td>前標</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -134,38 +149,30 @@
             </div>
 
             <div class="row">
-                <!-- 學校列表 -->
                 <div class="col-md-4 mb-3">
-                    <input type="text" class="form-control mb-2" id="school-search" placeholder="搜尋學校..." oninput="filterSchools()">
-                    <div class="list-group" id="school-list" style="height: 600px; overflow-y: auto;">
-                        <div class="text-center p-3">正在讀取學校資料...</div>
+                    <input type="text" class="form-control form-control-sm mb-2" id="school-search" placeholder="搜尋學校..." oninput="filterSchools()">
+                    <div class="list-group" id="school-list" style="height: 500px; overflow-y: auto;">
+                        <div class="text-center p-3 small">讀取資料中...</div>
                     </div>
                 </div>
-
-                <!-- 科系列表 -->
                 <div class="col-md-8">
                     <div class="card">
-                        <div class="card-header bg-white">
-                            <h5 id="selected-school-name" class="m-0">請選擇左側學校</h5>
-                        </div>
-                        <div class="card-body" id="dept-list" style="height: 600px; overflow-y: auto;">
-                            <div class="text-center text-muted mt-5">
-                                👈 點擊左側學校查看科系
-                            </div>
+                        <div class="card-header bg-white py-2"><strong id="selected-school-name">請選擇學校</strong></div>
+                        <div class="card-body p-2" id="dept-list" style="height: 500px; overflow-y: auto;">
+                            <div class="text-center text-muted mt-5 small">👈 點擊左側學校查看科系</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 底部選填清單 -->
         <div class="bottom-cart" id="application-cart" style="display: flex;">
             <div class="container d-flex justify-content-between align-items-center">
                 <div>
-                    <strong>已選志願：</strong> <span id="cart-count" class="badge bg-primary">0</span> / 6
-                    <div id="cart-items" class="small text-muted text-truncate" style="max-width: 600px;"></div>
+                    <strong>志願：</strong> <span id="cart-count" class="badge bg-primary">0</span> / 6
+                    <div id="cart-items" class="small text-muted text-truncate" style="max-width: 200px;"></div>
                 </div>
-                <button class="btn btn-success" onclick="submitApplication()">確認送出志願</button>
+                <button class="btn btn-success btn-sm" onclick="submitApplication()">送出</button>
             </div>
         </div>
     </div>
@@ -180,48 +187,7 @@
                 </div>
                 <div class="modal-body" id="result-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="location.reload()">重新開始遊戲</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 訓練選擇 Modal (修改版：選擇強度) -->
-    <div class="modal fade" id="trainingModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="training-modal-title">訓練選擇</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted text-center mb-3">請選擇本次訓練的強度：</p>
-                    <div class="row g-2 train-btn-group">
-                        <div class="col-6">
-                            <button class="btn btn-outline-info w-100" onclick="confirmTraining(0)">
-                                <strong>📖 稍微翻翻</strong>
-                                <small>體力 -5% | 效果: 低</small>
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-outline-primary w-100" onclick="confirmTraining(1)">
-                                <strong>✍️ 認真刷題</strong>
-                                <small>體力 -10% | 效果: 中</small>
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-outline-warning w-100" onclick="confirmTraining(2)">
-                                <strong>🧠 補習班衝刺</strong>
-                                <small>體力 -15% | 效果: 高</small>
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-outline-danger w-100" onclick="confirmTraining(3)">
-                                <strong>🔥 燃燒生命</strong>
-                                <small>體力 -20% | 效果: 極限</small>
-                            </button>
-                        </div>
-                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="location.reload()">重玩</button>
                 </div>
             </div>
         </div>
@@ -231,9 +197,26 @@
     <div class="modal fade" id="scoreModal" data-bs-backdrop="static" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-warning"><h5 class="modal-title">成績單</h5></div>
-                <div class="modal-body" id="score-content"></div>
-                <div class="modal-footer"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">繼續</button></div>
+                <div class="modal-header bg-warning py-2"><h5 class="modal-title" id="score-modal-title">成績單</h5></div>
+                <div class="modal-body p-0">
+                    <table class="table table-striped mb-0 score-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>科目</th>
+                                <th>原始分數</th>
+                                <th>級距</th>
+                                <th>級分</th>
+                            </tr>
+                        </thead>
+                        <tbody id="score-table-body">
+                            <!-- JS 生成 -->
+                        </tbody>
+                    </table>
+                    <div class="p-2 text-end border-top">
+                        <h5 class="m-0" id="score-total-display">總級分: 0</h5>
+                    </div>
+                </div>
+                <div class="modal-footer py-1"><button type="button" class="btn btn-primary btn-sm" id="score-confirm-btn" data-bs-dismiss="modal">繼續</button></div>
             </div>
         </div>
     </div>
@@ -242,7 +225,7 @@
     <div class="modal fade" id="eventModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-danger">
-                <div class="modal-header bg-danger text-white"><h5 class="modal-title">⚡ 突發事件</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header bg-danger text-white py-2"><h5 class="modal-title">⚡ 突發事件</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body text-center"><h4 id="event-title"></h4><p id="event-desc"></p></div>
             </div>
         </div>
@@ -250,7 +233,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // --- 全域變數 ---
+        // --- 1. 遊戲資料結構 ---
         const SUBJECTS_CONFIG = [
             { id: 'chi', name: '國文', max: 100, color: 'bg-primary' },
             { id: 'eng', name: '英語', max: 100, color: 'bg-info' },
@@ -260,17 +243,16 @@
             { id: 'nat', name: '自然', max: 128, color: 'bg-secondary' }
         ];
 
+        // 級距設定
         let GRADE_INTERVALS = { 'chi': 6.6, 'eng': 6.5, 'mathA': 5.8, 'mathB': 6.8, 'soc': 8.2, 'nat': 7.5 };
-        let gameState = { week: 1, energy: 100, subjects: [], isGameOver: false };
-        let playerResults = {}; // 最終成績 {id: {raw, grade}}
-        let currentStandards = {}; // 當年度五標
-        let applicationCart = []; // 購物車
-        let ALL_SCHOOLS_DATA = []; // 從 JSON 讀取的資料
         
-        // 暫存變數
-        let currentSelectedSubjectIndex = -1;
-
-        // --- 1. 遊戲初始化 & 多檔案讀取 ---
+        // 遊戲狀態
+        let gameState = { week: 1, energy: 100, subjects: [], isGameOver: false };
+        let playerResults = {}; // {id: {raw, grade, interval}}
+        let currentStandards = {}; 
+        let applicationCart = [];
+        let ALL_SCHOOLS_DATA = [];
+        let lastEventSubjectId = null; // 紀錄上次發生事件的科目，避免連續
 
         function log(msg, type = 'normal') {
             const logArea = document.getElementById('game-log');
@@ -281,66 +263,66 @@
             logArea.prepend(div);
         }
 
+        // --- 2. 初始化 ---
         async function initGame() {
-            // 讀取 3 個 JSON 檔案 (不使用 ./ 開頭以避免部分環境問題)
             const files = ['schools_1.json', 'schools_2.json', 'schools_3.json'];
-            
             try {
                 const promises = files.map(url => fetch(url).then(res => {
-                    if(!res.ok) throw new Error(`無法讀取 ${url}`);
+                    if(!res.ok) throw new Error("File error");
                     return res.json();
                 }));
                 const results = await Promise.all(promises);
-                ALL_SCHOOLS_DATA = results.flat();
-                ALL_SCHOOLS_DATA.sort((a, b) => parseInt(a.id) - parseInt(b.id)); // 排序
-                log(`成功讀取 ${ALL_SCHOOLS_DATA.length} 所學校資料！`, "good");
-            } catch (error) {
-                console.error(error);
-                log("⚠️ 讀取資料失敗，請確認檔案與 index.html 在同一層。", "bad");
-                ALL_SCHOOLS_DATA = [{id: "000", name: "資料讀取失敗", depts: []}];
+                ALL_SCHOOLS_DATA = results.flat().sort((a,b)=>parseInt(a.id)-parseInt(b.id));
+                log(`資料庫載入完成：${ALL_SCHOOLS_DATA.length} 所學校`, "good");
+            } catch (e) {
+                console.error(e);
+                log("⚠️ 資料讀取失敗，請確認 JSON 檔案。", "bad");
+                ALL_SCHOOLS_DATA = [{id:"000",name:"讀取失敗",depts:[]}];
             }
 
-            // 初始化數值
             gameState.week = 1;
             gameState.energy = 100;
             gameState.subjects = SUBJECTS_CONFIG.map(conf => {
                 let startScore = clamp(randomNormal(conf.max * 0.45, conf.max * 0.15), 1, conf.max * 0.8);
                 return { ...conf, score: startScore, lastTrained: 0 };
             });
+
             renderSubjects();
+            renderControlPanel();
             updateUI();
         }
-
-        // --- 2. 遊戲核心邏輯 ---
-        function randomNormal(mean, stdDev) {
-            let u = 0, v = 0;
-            while(u === 0) u = Math.random(); 
-            while(v === 0) v = Math.random();
-            return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v ) * stdDev + mean;
-        }
-        function clamp(val, min, max) { return Math.min(Math.max(val, min), max); }
 
         function renderSubjects() {
             const container = document.getElementById('subjects-container');
             container.innerHTML = '';
-            gameState.subjects.forEach((sub, index) => {
+            gameState.subjects.forEach(sub => {
                 const percent = (sub.score / sub.max) * 100;
                 container.innerHTML += `
-                    <div class="col-md-6">
+                    <div class="col-md-4 col-6">
                         <div class="stat-card">
-                            <div class="subject-title mb-2">
-                                ${sub.name}
-                                <span>${sub.score.toFixed(1)} / ${sub.max}</span>
+                            <div class="subject-title">
+                                ${sub.name} <span class="text-muted" style="font-size:0.9em">${sub.score.toFixed(1)}</span>
                             </div>
-                            <div class="progress mb-3">
+                            <div class="progress">
                                 <div class="progress-bar ${sub.color}" style="width: ${percent}%"></div>
                             </div>
-                            <button class="btn btn-outline-dark w-100" onclick="openTrainingOptions(${index})">
-                                🏋️ 訓練 ${sub.name}
-                            </button>
                         </div>
                     </div>`;
             });
+        }
+
+        function renderControlPanel() {
+            for(let i=0; i<4; i++) {
+                const grid = document.getElementById(`grid-${i}`);
+                grid.innerHTML = '';
+                gameState.subjects.forEach((sub, subIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = `btn btn-subject`;
+                    btn.innerText = sub.name;
+                    btn.onclick = () => doTraining(subIdx, i);
+                    grid.appendChild(btn);
+                });
+            }
         }
 
         function updateUI() {
@@ -351,111 +333,107 @@
             bar.className = `progress-bar ${gameState.energy<=20 ? 'bg-danger':'bg-success'}`;
         }
 
-        // --- 修改後的訓練邏輯：先點科目，再選強度 ---
-
-        window.openTrainingOptions = function(subjectIndex) {
-            if(gameState.energy < 5) { alert("體力不足，請直接進入下一週！"); return; }
-            
-            currentSelectedSubjectIndex = subjectIndex;
-            const sub = gameState.subjects[subjectIndex];
-            
-            // 更新 Modal 標題
-            document.getElementById('training-modal-title').innerText = `訓練科目：${sub.name}`;
-            
-            // 開啟 Modal
-            new bootstrap.Modal(document.getElementById('trainingModal')).show();
+        // --- 3. 核心邏輯 ---
+        function randomNormal(mean, stdDev) {
+            let u=0, v=0;
+            while(u===0) u=Math.random(); 
+            while(v===0) v=Math.random();
+            return Math.sqrt(-2.0*Math.log(u)) * Math.cos(2.0*Math.PI*v) * stdDev + mean;
         }
+        function clamp(val, min, max) { return Math.min(Math.max(val, min), max); }
 
-        window.confirmTraining = function(intensityIndex) {
-            // 關閉 Modal
-            bootstrap.Modal.getInstance(document.getElementById('trainingModal')).hide();
-
-            const sub = gameState.subjects[currentSelectedSubjectIndex];
+        window.doTraining = function(subIdx, intensityIndex) {
+            const sub = gameState.subjects[subIdx];
             const costs = [5, 10, 15, 20];
             const cost = costs[intensityIndex];
 
-            // 再次檢查體力
             if(gameState.energy < cost) {
-                alert("體力不足以進行此強度的訓練！");
+                alert("體力不足！");
+                if(gameState.energy < 5) nextWeek();
                 return;
             }
-            
-            // 計算成長
+
             let gain = (sub.id === 'mathA') ? (0.1 + Math.random()*0.4) : (cost/10.0 + (Math.random()*0.2-0.1));
             
             gameState.energy -= cost;
             sub.score += gain;
             sub.lastTrained = gameState.week;
-            
+
             // 滿分懲罰
             if(sub.score >= sub.max) {
                 sub.score = sub.max;
                 if(sub.id !== 'nat' && sub.id !== 'soc') {
-                     let drop = Math.floor(Math.random()*10)+5;
-                     sub.score -= drop;
-                     log(`${sub.name} 滿分自滿，能力倒退 ${drop}`, 'bad');
+                    let drop = Math.floor(Math.random()*10)+5;
+                    sub.score -= drop;
+                    log(`${sub.name} 自滿 -${drop}`, 'bad');
                 }
             }
 
-            // 突發事件
-            if(Math.random() < 0.1) {
-                 let target = gameState.subjects[Math.floor(Math.random()*6)];
-                 let drop = Math.floor(Math.random()*5)+2;
-                 target.score = Math.max(0, target.score - drop);
-                 log(`突發事件: ${target.name} -${drop}`, 'bad');
-                 document.getElementById('event-title').innerText = "糟糕！";
-                 document.getElementById('event-desc').innerText = `發生了一些意外，導致 ${target.name} 退步了。`;
-                 new bootstrap.Modal(document.getElementById('eventModal')).show();
+            // 隨機事件 (機率降為 8%，且避免同一科連續)
+            if(Math.random() < 0.08) {
+                let possibleTargets = gameState.subjects.filter(s => s.id !== lastEventSubjectId);
+                // 如果只剩一科或者過濾後沒東西(理論上不可能因為有6科)，就全取
+                if(possibleTargets.length === 0) possibleTargets = gameState.subjects;
+                
+                let target = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
+                lastEventSubjectId = target.id; // 更新冷卻目標
+
+                let drop = Math.floor(Math.random()*5)+2;
+                target.score = Math.max(0, target.score - drop);
+                log(`突發: ${target.name} -${drop}`, 'bad');
+                document.getElementById('event-title').innerText = "突發狀況";
+                document.getElementById('event-desc').innerText = `意外發生！${target.name} 退步了 ${drop} 分。`;
+                new bootstrap.Modal(document.getElementById('eventModal')).show();
             }
 
             renderSubjects();
             updateUI();
-            
-            // 體力過低自動下一週
             if(gameState.energy < 5) setTimeout(nextWeek, 300);
         }
 
         function nextWeek() {
             if(gameState.week >= 20) { endGame(); return; }
+            
             gameState.subjects.forEach(sub => {
                 if(sub.lastTrained > 0 && (gameState.week - sub.lastTrained) >= 2) {
                     sub.score = Math.max(0, sub.score - 5);
-                    log(`${sub.name} 太久沒讀生疏了 -5`, 'bad');
+                    log(`${sub.name} 生疏 -5`, 'bad');
                 }
             });
+
             if(gameState.week % 5 === 0) showScoreCard(false);
+
             gameState.week++;
             gameState.energy = 100;
-            log(`進入第 ${gameState.week} 週`, 'good');
+            log(`=== 第 ${gameState.week} 週 ===`, 'normal');
             renderSubjects();
             updateUI();
         }
 
-        // --- 3. 考試系統 ---
-        function calculateGrade(score, subjectId) {
-            let grade = Math.round(score / GRADE_INTERVALS[subjectId]);
-            return clamp(grade, 0, 15);
+        // --- 4. 成績計算與顯示 ---
+        function calculateGrade(score, sid) {
+            return clamp(Math.round(score / GRADE_INTERVALS[sid]), 0, 15);
         }
 
         function generateFiveStandards() {
-            let standards = {};
+            let stds = {};
             SUBJECTS_CONFIG.forEach(sub => {
                 let base = { "頂": 13, "前": 11, "均": 8, "後": 5, "底": 3 };
-                let shift = Math.floor(Math.random() * 3) - 1;
-                standards[sub.id] = {
-                    "頂": clamp(base["頂"] + shift, 12, 15),
-                    "前": clamp(base["前"] + shift, 9, 12),
-                    "均": clamp(base["均"] + shift, 6, 9),
-                    "後": clamp(base["後"] + shift, 4, 7),
-                    "底": clamp(base["底"] + shift, 1, 4)
+                let shift = Math.floor(Math.random()*3)-1;
+                stds[sub.id] = {
+                    "頂": clamp(base["頂"]+shift,12,15), "前": clamp(base["前"]+shift,9,12),
+                    "均": clamp(base["均"]+shift,6,9), "後": clamp(base["後"]+shift,4,7),
+                    "底": clamp(base["底"]+shift,1,4)
                 };
             });
-            return standards;
+            return stds;
         }
 
         function showScoreCard(isFinal) {
-            let html = '<ul class="list-group">';
             let totalGrade = 0;
+            let tbody = document.getElementById('score-table-body');
+            tbody.innerHTML = '';
+            
             if(isFinal) currentStandards = generateFiveStandards();
 
             gameState.subjects.forEach(sub => {
@@ -466,26 +444,52 @@
                     finalScore = Math.min(finalScore, sub.max);
                 } else {
                     finalScore += (Math.random()*10 - 5);
+                    finalScore = Math.max(0, Math.min(finalScore, sub.max));
                 }
+
+                let interval = GRADE_INTERVALS[sub.id];
                 let grade = calculateGrade(finalScore, sub.id);
                 totalGrade += grade;
-                if(isFinal) playerResults[sub.id] = { raw: finalScore.toFixed(1), grade: grade };
 
-                html += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${sub.name}
-                    <span class="badge bg-primary rounded-pill">${grade} 級分</span>
-                </li>`;
+                // 儲存結果
+                if(isFinal) {
+                    playerResults[sub.id] = { raw: finalScore.toFixed(2), grade: grade, interval: interval };
+                }
+
+                // 生成表格行
+                let row = `
+                    <tr>
+                        <td class="fw-bold">${sub.name}</td>
+                        <td>${finalScore.toFixed(2)}</td>
+                        <td>${interval}</td>
+                        <td class="fw-bold text-primary">${grade}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
             });
-            html += `</ul><div class="mt-3 text-end"><h5>總級分: ${totalGrade}</h5></div>`;
-            document.getElementById('score-content').innerHTML = html;
+
+            document.getElementById('score-total-display').innerText = `總級分: ${totalGrade}`;
             
-            const modalEl = document.getElementById('scoreModal');
-            const modal = new bootstrap.Modal(modalEl);
+            let modalEl = document.getElementById('scoreModal');
+            let btn = document.getElementById('score-confirm-btn');
+            let title = document.getElementById('score-modal-title');
+
             if(isFinal) {
-                document.querySelector('#scoreModal .modal-footer button').onclick = startApplicationPhase;
-                document.querySelector('#scoreModal .modal-footer button').innerText = "前往志願選填";
+                title.innerText = "🏆 114學年度學測成績單";
+                btn.innerText = "前往志願選填";
+                btn.onclick = () => {
+                    bootstrap.Modal.getInstance(modalEl).hide();
+                    document.getElementById('game-view').style.display = 'none';
+                    document.getElementById('application-view').style.display = 'block';
+                    renderMyScoreBoard();
+                    renderSchoolList();
+                };
+            } else {
+                title.innerText = `第 ${gameState.week} 週 - 模擬考`;
+                btn.innerText = "繼續努力";
+                btn.onclick = () => bootstrap.Modal.getInstance(modalEl).hide();
             }
-            modal.show();
+            new bootstrap.Modal(modalEl).show();
         }
 
         function endGame() {
@@ -493,22 +497,14 @@
              showScoreCard(true);
         }
 
-        // --- 4. 申請入學系統 ---
-        function startApplicationPhase() {
-            bootstrap.Modal.getInstance(document.getElementById('scoreModal')).hide();
-            document.getElementById('game-view').style.display = 'none';
-            document.getElementById('application-view').style.display = 'block';
-            renderMyScoreBoard();
-            renderSchoolList();
-        }
-
+        // --- 5. 志願選填邏輯 ---
         function renderMyScoreBoard() {
-            let htmlRaw = '<td>原始分</td>', htmlRank = '<td>級分</td>', htmlTop = '<td>頂標</td>', htmlFront = '<td>前標</td>';
-            let totalG = 0;
+            let htmlRaw='<td>原始</td>', htmlRank='<td>級分</td>', htmlTop='<td>頂標</td>', htmlFront='<td>前標</td>';
+            let total=0;
             SUBJECTS_CONFIG.forEach(sub => {
                 let r = playerResults[sub.id];
                 let s = currentStandards[sub.id];
-                totalG += r.grade;
+                total += r.grade;
                 htmlRaw += `<td>${r.raw}</td>`;
                 htmlRank += `<td>${r.grade}</td>`;
                 htmlTop += `<td>${s["頂"]}</td>`;
@@ -518,66 +514,62 @@
             document.getElementById('score-row-rank').innerHTML = htmlRank;
             document.getElementById('standards-row-top').innerHTML = htmlTop;
             document.getElementById('standards-row-front').innerHTML = htmlFront;
-            document.getElementById('my-total-grade').innerText = `總級分: ${totalG}`;
+            document.getElementById('my-total-grade').innerText = `總級分: ${total}`;
         }
 
         function renderSchoolList(filterText = "") {
             const list = document.getElementById('school-list');
             list.innerHTML = '';
-            
-            const filteredSchools = ALL_SCHOOLS_DATA.filter(s => s.name.includes(filterText));
-
-            filteredSchools.forEach((sch, idx) => {
-                let item = document.createElement('a');
-                item.className = 'list-group-item list-group-item-action school-list-item';
+            const filtered = ALL_SCHOOLS_DATA.filter(s => s.name.includes(filterText));
+            filtered.forEach((sch) => {
+                let item = document.createElement('div');
+                item.className = 'list-group-item school-list-item px-2 py-1';
                 item.innerText = sch.name;
-                const realIndex = ALL_SCHOOLS_DATA.indexOf(sch);
+                const realIdx = ALL_SCHOOLS_DATA.indexOf(sch);
                 item.onclick = function() {
-                    document.querySelectorAll('.school-list-item').forEach(i => i.classList.remove('active'));
+                    document.querySelectorAll('.school-list-item').forEach(i=>i.classList.remove('active'));
                     item.classList.add('active');
-                    selectSchool(realIndex);
+                    selectSchool(realIdx);
                 };
                 list.appendChild(item);
             });
         }
 
         window.filterSchools = function() {
-            const txt = document.getElementById('school-search').value;
-            renderSchoolList(txt);
+            renderSchoolList(document.getElementById('school-search').value);
         }
 
-        function selectSchool(index) {
-            const school = ALL_SCHOOLS_DATA[index];
-            document.getElementById('selected-school-name').innerText = school.name;
+        function selectSchool(idx) {
+            const sch = ALL_SCHOOLS_DATA[idx];
+            document.getElementById('selected-school-name').innerText = sch.name;
             const container = document.getElementById('dept-list');
             container.innerHTML = '';
-
-            school.depts.forEach(dept => {
-                const analysis = analyzeProbability(dept);
+            
+            sch.depts.forEach(dept => {
+                const ana = analyzeProbability(dept);
+                // reqText: 檢定標準
+                let reqText = Object.keys(dept.req).map(k=>`${SUBJECTS_CONFIG.find(s=>s.id==k).name}${dept.req[k]}`).join(',');
+                // wText: 採計科目
+                let wText = dept.weight.map(w=>SUBJECTS_CONFIG.find(s=>s.id==w).name).join('+');
                 
-                let reqText = [];
-                for(let sub in dept.req) reqText.push(`${SUBJECTS_CONFIG.find(s=>s.id==sub).name}${dept.req[sub]}`);
-                let weightText = dept.weight.map(w=>SUBJECTS_CONFIG.find(s=>s.id==w).name).join('+');
+                let light = ana.status==='safe'?'light-green':(ana.status==='risky'?'light-yellow':'light-red');
+                let inCart = applicationCart.some(i=>i.sName===sch.name && i.dName===dept.name);
                 
-                let lightClass = analysis.status === 'safe' ? 'light-green' : (analysis.status === 'risky' ? 'light-yellow' : 'light-red');
-                let btnState = applicationCart.length >= 6 ? 'disabled' : '';
-                let isInCart = applicationCart.some(item => item.schoolName === school.name && item.deptName === dept.name);
+                // 按鈕邏輯：已加入則顯示取消(紅)，未加入顯示加入(藍)
+                let btn = inCart 
+                    ? `<button class="btn btn-outline-danger btn-sm" onclick="removeFromCartByObj('${sch.name}','${dept.name}')">取消選填</button>`
+                    : `<button class="btn btn-outline-primary btn-sm" onclick="addToCart('${sch.name}','${dept.name}')">加入志願</button>`;
                 
-                let btnHtml = isInCart 
-                    ? `<button class="btn btn-secondary btn-sm" disabled>已加入</button>`
-                    : `<button class="btn btn-outline-primary btn-sm" onclick="addToCart('${school.name}', '${dept.name}')" ${btnState}>加入志願</button>`;
-
                 container.innerHTML += `
-                    <div class="card dept-card p-3">
-                        <div class="d-flex justify-content-between align-items-center">
+                    <div class="dept-card px-2 py-2 bg-white">
+                        <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="mb-1 fw-bold">${dept.name}</h6>
-                                <small class="text-muted">檢定: ${reqText.join(', ')}</small><br>
-                                <small class="text-muted">採計: ${weightText}</small>
+                                <div class="fw-bold">${dept.name}</div>
+                                <div class="text-muted" style="font-size:0.8rem">檢: ${reqText} | 採: ${wText}</div>
                             </div>
                             <div class="text-end">
-                                <div class="mb-1" title="錄取機率"><span class="traffic-light ${lightClass}"></span><span class="small text-muted">${analysis.msg}</span></div>
-                                ${btnHtml}
+                                <div class="mb-1"><span class="traffic-light ${light}"></span><span class="small">${ana.msg}</span></div>
+                                ${btn}
                             </div>
                         </div>
                     </div>`;
@@ -585,85 +577,102 @@
         }
 
         function analyzeProbability(dept) {
-            for(let subId in dept.req) {
-                let requiredRank = currentStandards[subId][dept.req[subId]];
-                let myRank = playerResults[subId].grade;
-                if(myRank < requiredRank) return { status: 'fail', msg: '未達標' };
+            // 檢定
+            for(let k in dept.req) {
+                if(playerResults[k].grade < currentStandards[k][dept.req[k]]) return {status:'fail', msg:'未達標'};
             }
-            let myScore = 0;
-            dept.weight.forEach(w => myScore += playerResults[w].grade);
-            let diff = dept.baseScore; 
-            if(myScore >= diff + 2) return { status: 'safe', msg: '穩穩的' };
-            if(myScore >= diff - 2) return { status: 'risky', msg: '有機會' };
-            return { status: 'fail', msg: '危險' };
+            // 甄試總分 (總級分)
+            let myTotalGrade = 0; 
+            dept.weight.forEach(w => myTotalGrade += playerResults[w].grade);
+            
+            // baseScore 在 JSON 中代表去年的錄取總級分
+            if(myTotalGrade >= dept.baseScore) return {status:'safe', msg:'穩'};
+            if(myTotalGrade >= dept.baseScore - 2) return {status:'risky', msg:'有機會'};
+            return {status:'fail', msg:'危險'};
         }
 
         window.addToCart = function(sName, dName) {
-            if(applicationCart.length >= 6) return;
-            let school = ALL_SCHOOLS_DATA.find(s => s.name === sName);
-            let dept = school.depts.find(d => d.name === dName);
-            applicationCart.push({ schoolName: sName, deptName: dName, deptData: dept });
+            if(applicationCart.length >= 6) { alert("最多選填 6 個志願"); return; }
+            let sch = ALL_SCHOOLS_DATA.find(s=>s.name===sName);
+            let dept = sch.depts.find(d=>d.name===dName);
+            applicationCart.push({sName, dName, dept});
             updateCartUI();
-            let currentSchool = document.getElementById('selected-school-name').innerText;
-            if(currentSchool === sName) selectSchool(ALL_SCHOOLS_DATA.indexOf(school));
+            refreshCurrentSchoolView(sName);
+        }
+
+        window.removeFromCartByObj = function(sName, dName) {
+            let idx = applicationCart.findIndex(i => i.sName === sName && i.dName === dName);
+            if(idx !== -1) {
+                applicationCart.splice(idx, 1);
+                updateCartUI();
+                refreshCurrentSchoolView(sName);
+            }
+        }
+
+        function refreshCurrentSchoolView(sName) {
+            let cur = document.getElementById('selected-school-name').innerText;
+            if(cur === sName) {
+                let sch = ALL_SCHOOLS_DATA.find(s=>s.name===cur);
+                if(sch) selectSchool(ALL_SCHOOLS_DATA.indexOf(sch));
+            }
         }
 
         function updateCartUI() {
-            const cartBar = document.getElementById('application-cart');
-            const countSpan = document.getElementById('cart-count');
-            const itemsDiv = document.getElementById('cart-items');
-            if(applicationCart.length > 0) cartBar.style.display = 'flex';
-            countSpan.innerText = applicationCart.length;
-            itemsDiv.innerHTML = applicationCart.map((item, idx) => 
-                `<span class="badge bg-secondary me-1" style="cursor:pointer" onclick="removeFromCart(${idx})">${item.schoolName.substring(0,2)}..${item.deptName}✕</span>`
+            const bar = document.getElementById('application-cart');
+            bar.style.display = applicationCart.length>0 ? 'flex':'none';
+            document.getElementById('cart-count').innerText = applicationCart.length;
+            document.getElementById('cart-items').innerHTML = applicationCart.map((i,idx)=>
+                `<span class="badge bg-secondary me-1" style="cursor:pointer" onclick="remCart(${idx})">${i.sName.substr(0,2)}.${i.dName.substr(0,2)}✕</span>`
             ).join('');
         }
 
-        window.removeFromCart = function(idx) {
-            applicationCart.splice(idx, 1);
+        window.remCart = function(idx) {
+            let item = applicationCart[idx];
+            applicationCart.splice(idx,1);
             updateCartUI();
-            let currentSchool = document.getElementById('selected-school-name').innerText;
-            let sIdx = ALL_SCHOOLS_DATA.findIndex(s => s.name === currentSchool);
-            if(sIdx !== -1) selectSchool(sIdx);
+            refreshCurrentSchoolView(item.sName);
         }
 
         window.submitApplication = function() {
-            if(applicationCart.length === 0) { alert("請至少選一個志願！"); return; }
-            let resultHtml = '<div class="list-group">';
+            if(applicationCart.length===0) return;
+            let html = '<div class="list-group">';
+            
             applicationCart.forEach(item => {
-                const dept = item.deptData;
-                let passThreshold = true;
-                let failReason = "";
-                for(let subId in dept.req) {
-                    if(playerResults[subId].grade < currentStandards[subId][dept.req[subId]]) {
-                        passThreshold = false;
-                        failReason = `${SUBJECTS_CONFIG.find(s=>s.id==subId).name}標未達`;
-                        break;
+                let dept = item.dept;
+                let pass = true;
+                let reason = "";
+                
+                // 1. 檢定標準
+                for(let k in dept.req) {
+                    if(playerResults[k].grade < currentStandards[k][dept.req[k]]) {
+                        pass=false; reason=`${SUBJECTS_CONFIG.find(s=>s.id==k).name}標未達`; break;
                     }
                 }
-                let myWeightedRawScore = 0;
-                dept.weight.forEach(w => myWeightedRawScore += parseFloat(playerResults[w].raw));
-                let estimatedRawCutoff = dept.baseScore * 6.6 * (0.95 + Math.random()*0.1);
-
-                let isAdmitted = false;
-                if(passThreshold && myWeightedRawScore >= estimatedRawCutoff) isAdmitted = true;
-
-                let statusBadge = isAdmitted ? `<span class="badge bg-success">錄取</span>` : `<span class="badge bg-secondary">未錄取</span>`;
-                let detail = passThreshold 
-                    ? (isAdmitted ? `甄試總分 ${myWeightedRawScore.toFixed(1)} 成功錄取！` : `甄試總分 ${myWeightedRawScore.toFixed(1)} 未達錄取標準`)
-                    : `第一階段篩選未通過 (${failReason})`;
-
-                resultHtml += `
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">${item.schoolName} - ${item.deptName}</h5>
-                            ${statusBadge}
-                        </div>
-                        <p class="mb-1 small text-muted">${detail}</p>
-                    </div>`;
+                
+                // 2. 甄試總分 (採計科目級分總和)
+                let myTotalGrade = 0;
+                dept.weight.forEach(w => myTotalGrade += playerResults[w].grade);
+                
+                // 模擬錄取分數 (基準分浮動 +/- 1 級分)
+                let admissionCutoff = dept.baseScore + (Math.floor(Math.random()*3) - 1);
+                
+                let admit = pass && (myTotalGrade >= admissionCutoff);
+                
+                let badge = admit ? '<span class="badge bg-success">錄取</span>' : '<span class="badge bg-secondary">未錄取</span>';
+                let msg = pass 
+                    ? (admit ? `甄試總級分 ${myTotalGrade} 達錄取標準 (${admissionCutoff})` : `甄試總級分 ${myTotalGrade} 未達錄取標準 (${admissionCutoff})`)
+                    : `第一階段篩選未通過 (${reason})`;
+                
+                html += `<div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-1">${item.sName} - ${item.dName}</h5>
+                        ${badge}
+                    </div>
+                    <small class="text-muted">${msg}</small>
+                </div>`;
             });
-            resultHtml += '</div>';
-            document.getElementById('result-body').innerHTML = resultHtml;
+            html += '</div>';
+            document.getElementById('result-body').innerHTML = html;
             new bootstrap.Modal(document.getElementById('resultModal')).show();
         }
 

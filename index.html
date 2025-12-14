@@ -407,7 +407,14 @@
                 let target = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
                 lastEventSubjectId = target.id;
 
-                let drop = Math.floor(Math.random()*5)+2;
+                let drop;
+                if (target.id === 'mathB') {
+                    // 數B 比較簡單，運氣不好時只扣 1~3 分
+                    drop = Math.floor(Math.random() * 3) + 1;
+                } else {
+                    // 其他科目維持原本設定，扣 2~6 分
+                    drop = Math.floor(Math.random() * 5) + 2;
+                }
                 target.score = Math.max(0, target.score - drop);
                 log(`突發: ${target.name} -${drop}`, 'bad');
                 document.getElementById('event-title').innerText = "突發狀況";
@@ -697,5 +704,6 @@
     </script>
 </body>
 </html>
+
 
 

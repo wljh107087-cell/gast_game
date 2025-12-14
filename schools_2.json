@@ -1,11 +1,22 @@
 [
   {
+    "id": "003",
+    "name": "國立中興大學",
+    "depts": [
+      { "name": "獸醫學系", "req": {"mathA":"頂", "nat":"頂", "eng":"前"}, "weight": ["mathA","nat","eng"], "baseScore": 43.0 },
+      { "name": "電機工程學系", "req": {"mathA":"前", "nat":"前"}, "weight": ["mathA","nat","eng"], "baseScore": 38.0 },
+      { "name": "應用經濟學系", "req": {"eng":"前", "mathB":"前"}, "weight": ["eng","mathB","chi"], "baseScore": 36.0 },
+      { "name": "農藝學系", "req": {"nat":"前"}, "weight": ["nat","eng","chi"], "baseScore": 34.0 }
+    ]
+  },
+  {
     "id": "007",
     "name": "高雄醫學大學",
     "depts": [
       { "name": "醫學系", "req": {"mathA":"頂", "nat":"頂", "eng":"頂"}, "weight": ["mathA","nat","eng","chi"], "baseScore": 57.0 },
       { "name": "牙醫學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng"], "baseScore": 43.0 },
-      { "name": "藥學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng"], "baseScore": 41.0 }
+      { "name": "藥學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng"], "baseScore": 41.0 },
+      { "name": "物理治療學系", "req": {"nat":"前", "mathA":"前"}, "weight": ["nat","mathA","eng"], "baseScore": 38.0 }
     ]
   },
   {
@@ -14,17 +25,18 @@
     "depts": [
       { "name": "商船學系", "req": {"eng":"均", "mathA":"均"}, "weight": ["eng","mathA","nat"], "baseScore": 32.0 },
       { "name": "食品科學系", "req": {"nat":"均"}, "weight": ["nat","eng","chi"], "baseScore": 31.0 },
-      { "name": "資訊工程學系", "req": {"mathA":"前", "nat":"均"}, "weight": ["mathA","nat","eng"], "baseScore": 34.0 }
+      { "name": "資訊工程學系", "req": {"mathA":"前", "nat":"均"}, "weight": ["mathA","nat","eng"], "baseScore": 34.0 },
+      { "name": "運輸科學系", "req": {"mathA":"均", "eng":"均"}, "weight": ["mathA","eng","nat"], "baseScore": 30.0 }
     ]
   },
   {
-    "id": "027",
-    "name": "國立中山大學",
+    "id": "026",
+    "name": "中山醫學大學",
     "depts": [
-      { "name": "電機工程學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng"], "baseScore": 41.0 },
-      { "name": "資訊工程學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng"], "baseScore": 40.5 },
-      { "name": "海洋科學系", "req": {"nat":"前"}, "weight": ["nat","eng","mathA"], "baseScore": 36.0 },
-      { "name": "外國語文學系", "req": {"eng":"頂"}, "weight": ["eng","soc","chi"], "baseScore": 38.0 }
+      { "name": "醫學系", "req": {"mathA":"頂", "nat":"頂", "eng":"前"}, "weight": ["mathA","nat","eng","chi"], "baseScore": 56.0 },
+      { "name": "牙醫學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng"], "baseScore": 42.5 },
+      { "name": "物理治療學系", "req": {"nat":"前", "mathA":"均"}, "weight": ["nat","eng","mathA"], "baseScore": 38.0 },
+      { "name": "視光學系", "req": {"nat":"均"}, "weight": ["nat","eng","mathA"], "baseScore": 33.0 }
     ]
   },
   {
@@ -33,7 +45,8 @@
     "depts": [
       { "name": "資訊工程學系", "req": {"mathA":"均"}, "weight": ["mathA","nat","eng"], "baseScore": 31.0 },
       { "name": "自然資源與環境學系", "req": {"nat":"均"}, "weight": ["nat","eng","chi"], "baseScore": 29.0 },
-      { "name": "諮商與臨床心理學系", "req": {"eng":"均", "soc":"均"}, "weight": ["eng","soc","chi"], "baseScore": 35.0 }
+      { "name": "諮商與臨床心理學系", "req": {"eng":"均", "soc":"均"}, "weight": ["eng","soc","chi"], "baseScore": 35.0 },
+      { "name": "英美語文學系", "req": {"eng":"前"}, "weight": ["eng","chi","soc"], "baseScore": 30.0 }
     ]
   },
   {
@@ -52,7 +65,8 @@
     "depts": [
       { "name": "法律學系法學組", "req": {"chi":"頂", "soc":"頂"}, "weight": ["chi","soc","eng","mathB"], "baseScore": 56.0 },
       { "name": "公共行政暨政策學系", "req": {"eng":"前"}, "weight": ["eng","soc","chi"], "baseScore": 40.0 },
-      { "name": "會計學系", "req": {"mathB":"前", "eng":"前"}, "weight": ["mathB","eng","chi"], "baseScore": 39.0 }
+      { "name": "會計學系", "req": {"mathB":"前", "eng":"前"}, "weight": ["mathB","eng","chi"], "baseScore": 39.0 },
+      { "name": "統計學系", "req": {"mathA":"前", "eng":"前"}, "weight": ["mathA","eng","chi"], "baseScore": 37.0 }
     ]
   },
   {
@@ -61,7 +75,8 @@
     "depts": [
       { "name": "醫學系", "req": {"mathA":"頂", "nat":"頂", "eng":"頂"}, "weight": ["mathA","nat","eng","chi"], "baseScore": 58.0 },
       { "name": "牙醫學系", "req": {"mathA":"頂", "nat":"頂", "eng":"頂"}, "weight": ["mathA","nat","eng","chi"], "baseScore": 57.5 },
-      { "name": "藥學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng"], "baseScore": 42.0 }
+      { "name": "藥學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng"], "baseScore": 42.0 },
+      { "name": "護理學系", "req": {"nat":"前", "eng":"前"}, "weight": ["nat","eng","chi"], "baseScore": 36.0 }
     ]
   },
   {
@@ -70,7 +85,17 @@
     "depts": [
       { "name": "建築學系", "req": {"mathA":"均"}, "weight": ["mathA","eng","chi"], "baseScore": 28.0 },
       { "name": "經營管理學系", "req": {"eng":"均"}, "weight": ["eng","soc","chi"], "baseScore": 26.0 },
-      { "name": "資訊工程學系", "req": {"mathA":"均"}, "weight": ["mathA","nat","eng"], "baseScore": 27.0 }
+      { "name": "資訊工程學系", "req": {"mathA":"均"}, "weight": ["mathA","nat","eng"], "baseScore": 27.0 },
+      { "name": "機械工程學系", "req": {"mathA":"均"}, "weight": ["mathA","nat"], "baseScore": 25.0 }
+    ]
+  },
+  {
+    "id": "152",
+    "name": "馬偕醫學院",
+    "depts": [
+      { "name": "醫學系", "req": {"mathA":"頂", "nat":"頂"}, "weight": ["mathA","nat","eng","chi"], "baseScore": 56.5 },
+      { "name": "護理學系", "req": {"nat":"均", "eng":"均"}, "weight": ["nat","eng","chi"], "baseScore": 33.0 },
+      { "name": "聽力暨語言治療學系", "req": {"nat":"前", "eng":"前"}, "weight": ["nat","eng","mathB"], "baseScore": 35.0 }
     ]
   }
 ]

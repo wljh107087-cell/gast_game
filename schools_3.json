@@ -25,11 +25,6 @@
     "id": "008",
     "name": "中原大學",
     "depts": [
-[
-    {
-        "id": "008",
-        "name": "中原大學",
-        "depts": [
             
       { "name": "建築學系", "req": {"mathB":"前", "eng":"均"}, "weight": ["mathB","eng","soc","chi"], "baseScore": 46.0 },
       { "name": "室內設計學系", "req": {"eng":"均", "soc":"均"}, "weight": ["eng","soc","chi"], "baseScore": 38.0 },
@@ -120,4 +115,5 @@
     ]
   }
 ]
+
 

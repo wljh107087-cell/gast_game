@@ -318,6 +318,7 @@
 
             gameState.week = 1;
             gameState.energy = 100;
+            gameState.eventsThisWeek = 0;
             gameState.subjects = SUBJECTS_CONFIG.map(conf => {
                 let startScore = clamp(randomNormal(conf.max * 0.45, conf.max * 0.15), 1, conf.max * 0.8);
                 return { ...conf, score: startScore, lastTrained: 0 };
@@ -403,27 +404,28 @@
                 }
             }
 
-            if(Math.random() < 0.08) {
+// 隨機事件 (機率 8%，避免連續，且每週上限 3 次)
+            if(Math.random() < 0.08 && gameState.eventsThisWeek < 3) {
                 let possibleTargets = gameState.subjects.filter(s => s.id !== lastEventSubjectId);
                 if(possibleTargets.length === 0) possibleTargets = gameState.subjects;
                 
                 let target = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
                 lastEventSubjectId = target.id;
+                gameState.eventsThisWeek++; // 增加本週事件計數
 
-                let drop;
-                if (target.id === 'mathB') {
-                    // 數B 比較簡單，運氣不好時只扣 1~3 分
-                    drop = Math.floor(Math.random() * 3) + 1;
-                } else {
-                    // 其他科目維持原本設定，扣 2~6 分
-                    drop = Math.floor(Math.random() * 5) + 2;
-                }
+                // ★ 修改重點：扣分範圍改為 0.5 至 3.0
+                let drop = 0.5 + Math.random() * 2.5;
+
                 target.score = Math.max(0, target.score - drop);
-                log(`突發: ${target.name} -${drop}`, 'bad');
+                
+                // 顯示小數點後一位
+                let dropStr = drop.toFixed(1);
+                log(`突發: ${target.name} -${dropStr}`, 'bad');
                 document.getElementById('event-title').innerText = "突發狀況";
-                document.getElementById('event-desc').innerText = `意外發生！${target.name} 退步了 ${drop} 分。`;
+                document.getElementById('event-desc').innerText = `意外發生！${target.name} 退步了 ${dropStr} 分。`;
                 new bootstrap.Modal(document.getElementById('eventModal')).show();
             }
+
 
             renderSubjects();
             updateUI();
@@ -435,8 +437,8 @@
             
             gameState.subjects.forEach(sub => {
                 if(sub.lastTrained > 0 && (gameState.week - sub.lastTrained) >= 2) {
-                    sub.score = Math.max(0, sub.score - 5);
-                    log(`${sub.name} 生疏 -5`, 'bad');
+                    sub.score = Math.max(0, sub.score - 2);
+                    log(`${sub.name} 生疏 -2`, 'bad');
                 }
             });
 
@@ -444,6 +446,7 @@
 
             gameState.week++;
             gameState.energy = 100;
+            gameState.eventsThisWeek = 0;
             log(`=== 第 ${gameState.week} 週 ===`, 'normal');
             renderSubjects();
             updateUI();
@@ -707,6 +710,7 @@
     </script>
 </body>
 </html>
+
 
 
 

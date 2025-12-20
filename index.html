@@ -294,13 +294,6 @@
         }
 
         async function initGame() {
-            // 設定社會科級距 (6~8 隨機)
-            GRADE_INTERVALS['soc'] = parseFloat((6 + Math.random() * 2).toFixed(2));
-            // --- 新增這行：設定國文科級距 (5~7 隨機) ---
-            GRADE_INTERVALS['chi'] = parseFloat((5 + Math.random() * 2).toFixed(2));
-            // ---------------------------------------
-            console.log("本局社會科級距:", GRADE_INTERVALS['soc']);
-
             const files = ['schools_1.json', 'schools_2.json', 'schools_3.json'];
             try {
                 const promises = files.map(url => fetch(url).then(res => {
@@ -471,6 +464,22 @@
         }
 
         function showScoreCard(isFinal) {
+            // ★ 新增這段：每次考試都重新生成隨機級距
+            // 1. 國文：5~7 之間
+            GRADE_INTERVALS['chi'] = parseFloat((5 + Math.random() * 2).toFixed(2));
+            // 2. 社會：6~8 之間
+            GRADE_INTERVALS['soc'] = parseFloat((6 + Math.random() * 2).toFixed(2));
+            // 3. 自然：5~8 之間 (依照最初要求)
+            GRADE_INTERVALS['nat'] = parseFloat((5 + Math.random() * 3).toFixed(2));
+            
+            // 4. 其他科目：給予微幅波動，確保每次不同，但維持難易度設定
+            // 數A (較難，級距低): 約 5.6~6.0
+            GRADE_INTERVALS['mathA'] = parseFloat((5.6 + Math.random() * 0.4).toFixed(2));
+            // 數B (較易，級距高): 約 6.6~7.0
+            GRADE_INTERVALS['mathB'] = parseFloat((6.6 + Math.random() * 0.4).toFixed(2));
+            // 英文: 約 6.3~6.7
+            GRADE_INTERVALS['eng'] = parseFloat((6.3 + Math.random() * 0.4).toFixed(2));
+            
             let totalGrade = 0;
             let tbody = document.getElementById('score-table-body');
             tbody.innerHTML = '';
@@ -710,6 +719,7 @@
     </script>
 </body>
 </html>
+
 
 
 
